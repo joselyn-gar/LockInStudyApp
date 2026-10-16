@@ -35,9 +35,9 @@ export const StarryMascot: React.FC<StarryMascotProps> = ({
   const dim = getDimension();
 
   // Colors calibrated to mockup
-  const starSkin = '#E0C399'; // Warm golden-beige star color
+  const starSkin = '#E3C8A2'; // Lock In tan, the only color in the app
   const eyeDark = '#422918'; // Dark rich brown for pupils and mouth
-  const cheekPink = '#D98A7A'; // Warm rosy pink cheeks
+  const cheekPink = '#E8A598'; // Blush cheeks
   const armColor = '#3B291B'; // Thin stick figure arms/legs
   const tonguePink = '#E18A7A'; // Cute pink tongue
 
@@ -97,7 +97,7 @@ export const StarryMascot: React.FC<StarryMascotProps> = ({
             cy="222"
             rx={46 * armGrowth}
             ry={7 * armGrowth}
-            fill="#DDD4C2"
+            fill="#EDEDED"
             opacity={armGrowth}
           />
 
@@ -269,7 +269,7 @@ export const StarryMascot: React.FC<StarryMascotProps> = ({
     return (
       <div className={`relative inline-flex flex-col items-center ${className}`}>
         <svg viewBox="0 0 240 240" style={{ width: dim, height: dim }}>
-          <ellipse cx="120" cy="225" rx="45" ry="8" fill="#B3522E" opacity="0.4" />
+          <ellipse cx="120" cy="225" rx="45" ry="8" fill="#000000" opacity="0.08" />
           <g stroke="#26160C" strokeWidth="4" strokeLinecap="round">
             <path d="M 104 185 L 100 218 L 92 219" />
             <path d="M 136 185 L 140 218 L 148 219" />
@@ -303,7 +303,7 @@ export const StarryMascot: React.FC<StarryMascotProps> = ({
           <g className="animate-sweat">
             <path
               d="M 178 78 C 178 72, 184 66, 184 66 C 184 66, 190 72, 190 78 C 190 82, 187 85, 184 85 C 181 85, 178 82, 178 78 Z"
-              fill="#75D1FF"
+              fill="#D9D9D9"
             />
           </g>
           <path
@@ -325,18 +325,19 @@ export const StarryMascot: React.FC<StarryMascotProps> = ({
       className={`relative inline-flex flex-col items-center select-none ${onClick ? 'cursor-pointer' : ''} ${className}`}
     >
       {speechText && (
-        <div className="mb-3 relative px-5 py-3 bg-[#475531] text-[#F7F4EB] text-sm sm:text-base font-black rounded-3xl shadow-md text-center animate-bounce">
+        <div className="mb-2 px-4 py-2 bg-white text-ink text-sm font-semibold rounded-full border border-card-line shadow-card text-center whitespace-nowrap">
           {speechText}
-          <div className="absolute -bottom-2 left-1/2 -translate-x-1/2 w-0 h-0 border-l-[7px] border-l-transparent border-r-[7px] border-r-transparent border-t-[9px] border-t-[#475531]" />
         </div>
       )}
 
       <svg
+        role="img"
+        aria-label="Starry, the Lock In star"
         viewBox="0 0 240 240"
         className="w-full h-full animate-breathe"
         style={{ width: dim, height: dim }}
       >
-        <ellipse cx="120" cy="222" rx="46" ry="7" fill="#DDD4C2" />
+        <ellipse cx="120" cy="222" rx="46" ry="7" fill="#EDEDED" />
 
         <g stroke={armColor} strokeWidth="3.5" strokeLinecap="round">
           <line x1="104" y1="184" x2="102" y2="218" />
@@ -352,10 +353,10 @@ export const StarryMascot: React.FC<StarryMascotProps> = ({
             cy="130"
             r="88"
             fill="none"
-            stroke="#C4F46C"
-            strokeWidth="4"
+            stroke="#111111"
+            strokeWidth="2"
             strokeDasharray="6 6"
-            className="animate-spin opacity-80"
+            className="animate-spin opacity-20"
             style={{ animationDuration: '8s' }}
           />
         )}
@@ -376,14 +377,14 @@ export const StarryMascot: React.FC<StarryMascotProps> = ({
             <g transform="translate(120, 154) scale(0.85)">
               <polygon
                 points="0,-12 3.5,-3.5 12,-3.5 5,2 8,11 0,6 -8,11 -5,2 -12,-3.5 -3.5,-3.5"
-                fill="#FFD700"
-                stroke="#C4A000"
+                fill={starSkin}
+                stroke={eyeDark}
                 strokeWidth="1.5"
               />
               {/* Little crumbs / sparkles */}
-              <circle cx="-14" cy="-6" r="1.5" fill="#FFD700" opacity="0.9" />
-              <circle cx="15" cy="-4" r="1.5" fill="#C4F46C" opacity="0.9" />
-              <circle cx="0" cy="14" r="1.2" fill="#FFA88A" opacity="0.8" />
+              <circle cx="-14" cy="-6" r="1.5" fill={starSkin} opacity="0.9" />
+              <circle cx="15" cy="-4" r="1.5" fill={starSkin} opacity="0.9" />
+              <circle cx="0" cy="14" r="1.2" fill={cheekPink} opacity="0.8" />
             </g>
           </g>
         ) : (

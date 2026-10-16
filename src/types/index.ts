@@ -108,6 +108,7 @@ export interface CourseMilestone {
   date: string;
   isCompleted: boolean;
   coverageModules: number[];
+  format?: string; // e.g. "Multiple choice + short answer"
 }
 
 export interface CourseData {
