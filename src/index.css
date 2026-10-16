@@ -1,34 +1,77 @@
 @import "tailwindcss";
 
+/*
+ * Lock In design tokens. Every color, font, radius and shadow in the app
+ * comes from here. The star mascot is the only color; everything else is
+ * black, white and gray.
+ */
+@theme {
+  --color-*: initial;
+  --color-white: #FFFFFF;
+  --color-black: #000000;
+  --color-transparent: transparent;
+  --color-current: currentColor;
+
+  --color-bg: #FFFFFF;
+  --color-subtle: #FAFAFA;   /* sidebar, quiet surfaces */
+  --color-card: #FFFFFF;
+  --color-card-line: #ECECEC;
+  --color-soft: #F2F2F2;     /* soft fills, secondary buttons */
+  --color-soft-hover: #E8E8E8;
+  --color-line: #E6E6E6;
+  --color-ink: #111111;      /* text and the one accent */
+  --color-ink-hover: #2A2A2A;
+  --color-muted: #6B6B6B;    /* secondary text; #707070 in the spec, nudged to pass AA on #F2F2F2 */
+  --color-muted-strong: #5C5C5C; /* secondary text on #F2F2F2, keeps AA */
+  --color-track: #E6E6E6;    /* empty part of bars and rings */
+  --color-at-risk: #B5B5B5;  /* gray ring for courses that need attention */
+
+  --color-star: #E3C8A2;
+  --color-star-blush: #E8A598;
+
+  --font-sans: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+
+  --radius-card: 16px;
+  --shadow-card: 0 1px 2px rgba(0, 0, 0, 0.06);
+}
+
 @layer base {
+  html {
+    -webkit-text-size-adjust: 100%;
+  }
+
   body {
-    font-family: 'Plus Jakarta Sans', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-    background-color: #3B4232;
-    color: #1A2114;
+    font-family: var(--font-sans);
+    background-color: var(--color-bg);
+    color: var(--color-ink);
+    font-size: 15px;
+    line-height: 1.5;
     overflow-x: hidden;
+    -webkit-font-smoothing: antialiased;
   }
 
-  h1, h2, h3, h4, .font-heading {
-    font-family: 'Plus Jakarta Sans', 'Space Grotesk', sans-serif;
-    font-weight: 800;
-    letter-spacing: -0.025em;
+  h1, h2, h3, h4 {
+    font-weight: 700;
+    letter-spacing: -0.02em;
+  }
+
+  ::selection {
+    background: var(--color-ink);
+    color: var(--color-white);
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--color-ink);
+    outline-offset: 2px;
   }
 }
 
-/* Custom scrollbar */
-::-webkit-scrollbar {
-  width: 8px;
-  height: 8px;
-}
-::-webkit-scrollbar-track {
-  background: #2D3325;
-}
-::-webkit-scrollbar-thumb {
-  background: #505943;
-  border-radius: 9999px;
-}
-::-webkit-scrollbar-thumb:hover {
-  background: #C4F46C;
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
 }
 
 @keyframes breathe {

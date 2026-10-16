@@ -72,7 +72,7 @@ export const FileEmbedSection: React.FC<FileEmbedSectionProps> = ({
 
       onAddFile(newFile, extractedQuestions);
       setUploadSuccessMsg(
-        `Embedded "${fileName}"! Extracted ${extractedQuestions.length || 3} course content questions (Zero syllabus trivia).`
+        `Added ${fileName}. ${extractedQuestions.length || 3} new questions.`
       );
     } catch {
       // Fallback local file embed
@@ -87,7 +87,7 @@ export const FileEmbedSection: React.FC<FileEmbedSectionProps> = ({
         parsedItemsCount: parsedCount,
       };
       onAddFile(newFile);
-      setUploadSuccessMsg(`Embedded "${fileName}" into ${courseCode}! Questions focused on course content.`);
+      setUploadSuccessMsg(`Added ${fileName} to ${courseCode}.`);
     } finally {
       setIsProcessing(false);
       setTimeout(() => setUploadSuccessMsg(''), 5500);
@@ -136,19 +136,15 @@ export const FileEmbedSection: React.FC<FileEmbedSectionProps> = ({
   };
 
   return (
-    <div className="w-full bg-white rounded-2xl border-2 border-[#D8D1BD] p-4 sm:p-5 text-[#1E2516] space-y-4 shadow-xs">
+    <div className="w-full bg-white rounded-2xl border border-line p-4 sm:p-5 text-ink space-y-4 shadow-card">
       {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-3 border-b border-[#EAE3D0]">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-3 border-b border-line">
         <div>
           <div className="flex items-center gap-2">
-            <span className="w-2.5 h-2.5 rounded-full bg-[#C4F46C]" />
-            <h4 className="text-sm font-black text-[#1E2516]">
-              Manually Embed Past Exams & Course Content
-            </h4>
+            <h4 className="text-[19px] font-bold text-ink">Upload files</h4>
           </div>
-          <p className="text-[11px] text-[#606D53] mt-0.5">
-            Attach professor-provided PDF past exams, lecture slide decks, and core course content for{' '}
-            <strong className="text-[#1E2516]">{courseCode}</strong>.
+          <p className="text-[13px] text-muted mt-0.5">
+            Slides, past exams or notes for <strong className="text-ink">{courseCode}</strong>. Lock In writes practice questions from them.
           </p>
         </div>
 
@@ -156,11 +152,12 @@ export const FileEmbedSection: React.FC<FileEmbedSectionProps> = ({
         <div className="flex flex-wrap items-center gap-1.5 self-start sm:self-auto">
           {availableCourses && availableCourses.length > 0 && onCourseChange && (
             <div className="flex items-center gap-1.5">
-              <span className="text-[10px] font-bold uppercase text-[#69775C]">Target Class:</span>
+              <span className="text-[12px] font-bold uppercase text-muted">Class</span>
               <select
+                aria-label="Class"
                 value={courseCode}
                 onChange={(e) => onCourseChange(e.target.value)}
-                className="px-2.5 py-1 rounded-lg bg-[#F7F4EB] border border-[#CFC5AC] text-xs font-black text-[#1E2516] outline-hidden cursor-pointer"
+                className="px-2.5 py-1 rounded-lg bg-subtle border border-line text-[13px] font-bold text-ink outline-hidden cursor-pointer"
               >
                 {availableCourses.map((c) => (
                   <option key={c.code} value={c.code}>
@@ -174,68 +171,67 @@ export const FileEmbedSection: React.FC<FileEmbedSectionProps> = ({
             <button
               type="button"
               onClick={onAddNewClass}
-              className="px-2.5 py-1 rounded-lg bg-[#3B4232] hover:bg-[#272D21] text-[#C4F46C] text-[11px] font-black flex items-center gap-1 transition-colors cursor-pointer shadow-xs"
+              className="px-2.5 py-1 rounded-lg bg-ink hover:bg-ink text-white text-[13px] font-bold flex items-center gap-1 transition-colors cursor-pointer shadow-card"
               title="Add a custom class"
             >
               <Plus className="w-3 h-3" />
-              <span>+ New Class</span>
+              <span>New class</span>
             </button>
           )}
         </div>
       </div>
 
       {/* STRICT COURSE CONTENT GUARANTEE BANNER */}
-      <div className="p-3 rounded-xl bg-[#F0F7E6] border border-[#BBD79C] text-[#243E12] text-[11px] flex items-start gap-2.5 shadow-2xs">
-        <ShieldCheck className="w-4 h-4 text-[#43741E] shrink-0 mt-0.5" />
+      <div className="p-3 rounded-xl bg-subtle border border-line text-ink text-[13px] flex items-start gap-2.5 shadow-card">
+        <ShieldCheck className="w-4 h-4 text-ink shrink-0 mt-0.5" />
         <div className="leading-relaxed">
-          <span className="font-black text-[#1E330F]">Pure Course Content Focus: </span>
-          When files are embedded, Lock In parses <strong>core academic concepts, formulas, and testable exam problems</strong>. Questions are strictly about substantive course material—<strong>never syllabus logistics, grading percentages, attendance, or course policies</strong>.
+          Questions stick to course material. Never syllabus logistics, attendance or grading policies.
         </div>
       </div>
 
       {/* Category selector pills */}
       <div>
-        <label className="block text-[10px] font-bold uppercase tracking-wider text-[#4E5B42] mb-1.5">
-          Step 1: Choose File Category
+        <label className="block text-[12px] font-bold uppercase tracking-wider text-ink mb-1.5">
+          What kind of file?
         </label>
         <div className="grid grid-cols-3 gap-2">
           <button
             type="button"
             onClick={() => setSelectedType('past_exam')}
-            className={`p-2 rounded-xl text-xs font-black transition-all flex flex-col items-center justify-center gap-1 border cursor-pointer ${
+            className={`p-2 rounded-xl text-[13px] font-bold transition-all flex flex-col items-center justify-center gap-1 border cursor-pointer ${
               selectedType === 'past_exam'
-                ? 'bg-[#3B4232] text-[#C4F46C] border-[#1E2516] shadow-xs'
-                : 'bg-[#F7F4EB] text-[#4F5B42] border-[#DED7C2] hover:bg-[#EAE3D0]'
+                ? 'bg-ink text-white border-ink shadow-card'
+                : 'bg-subtle text-ink border-line hover:bg-soft'
             }`}
           >
-            <span className="text-sm">📑</span>
-            <span className="text-[11px] leading-tight">Past Exam Archive</span>
+            <span className="text-sm"></span>
+            <span className="text-[13px] leading-tight">Past Exam Archive</span>
           </button>
 
           <button
             type="button"
             onClick={() => setSelectedType('lecture_notes')}
-            className={`p-2 rounded-xl text-xs font-black transition-all flex flex-col items-center justify-center gap-1 border cursor-pointer ${
+            className={`p-2 rounded-xl text-[13px] font-bold transition-all flex flex-col items-center justify-center gap-1 border cursor-pointer ${
               selectedType === 'lecture_notes'
-                ? 'bg-[#3B4232] text-[#C4F46C] border-[#1E2516] shadow-xs'
-                : 'bg-[#F7F4EB] text-[#4F5B42] border-[#DED7C2] hover:bg-[#EAE3D0]'
+                ? 'bg-ink text-white border-ink shadow-card'
+                : 'bg-subtle text-ink border-line hover:bg-soft'
             }`}
           >
-            <span className="text-sm">🎙️</span>
-            <span className="text-[11px] leading-tight">Lecture Slides & Notes</span>
+            <span className="text-sm"></span>
+            <span className="text-[13px] leading-tight">Lecture Slides & Notes</span>
           </button>
 
           <button
             type="button"
             onClick={() => setSelectedType('course_content')}
-            className={`p-2 rounded-xl text-xs font-black transition-all flex flex-col items-center justify-center gap-1 border cursor-pointer ${
+            className={`p-2 rounded-xl text-[13px] font-bold transition-all flex flex-col items-center justify-center gap-1 border cursor-pointer ${
               selectedType === 'course_content' || (selectedType as string) === 'syllabus_rubric'
-                ? 'bg-[#3B4232] text-[#C4F46C] border-[#1E2516] shadow-xs'
-                : 'bg-[#F7F4EB] text-[#4F5B42] border-[#DED7C2] hover:bg-[#EAE3D0]'
+                ? 'bg-ink text-white border-ink shadow-card'
+                : 'bg-subtle text-ink border-line hover:bg-soft'
             }`}
           >
-            <span className="text-sm">📚</span>
-            <span className="text-[11px] leading-tight">Course Content & Readings</span>
+            <span className="text-sm"></span>
+            <span className="text-[13px] leading-tight">Course Content & Readings</span>
           </button>
         </div>
       </div>
@@ -249,12 +245,21 @@ export const FileEmbedSection: React.FC<FileEmbedSectionProps> = ({
         onDragLeave={() => setIsDragging(false)}
         onDrop={handleDrop}
         onClick={() => !isProcessing && fileInputRef.current?.click()}
-        className={`w-full p-5 rounded-2xl border-2 border-dashed transition-all flex flex-col items-center justify-center text-center cursor-pointer ${
+        role="button"
+        tabIndex={isProcessing ? -1 : 0}
+        aria-label={`Upload a file to ${courseCode}`}
+        onKeyDown={(e) => {
+          if ((e.key === 'Enter' || e.key === ' ') && !isProcessing) {
+            e.preventDefault();
+            fileInputRef.current?.click();
+          }
+        }}
+        className={`w-full p-5 rounded-2xl border border-dashed transition-all flex flex-col items-center justify-center text-center cursor-pointer ${
           isProcessing
-            ? 'border-[#9BB97B] bg-[#F2F8EA] opacity-80 cursor-wait'
+            ? 'border-line bg-subtle opacity-80 cursor-wait'
             : isDragging
-            ? 'border-[#3B4232] bg-[#EBF7DA]'
-            : 'border-[#CDC3AA] hover:border-[#3B4232] bg-[#FAF8F2]'
+            ? 'border-ink bg-ink text-white'
+            : 'border-line hover:border-ink bg-subtle'
         }`}
       >
         <input
@@ -268,22 +273,22 @@ export const FileEmbedSection: React.FC<FileEmbedSectionProps> = ({
 
         {isProcessing ? (
           <div className="flex flex-col items-center gap-2 py-2">
-            <Loader2 className="w-7 h-7 text-[#3B4232] animate-spin" />
-            <div className="text-xs font-black text-[#1E2516]">
-              Parsing Course Material with Gemini...
+            <Loader2 className="w-7 h-7 text-ink animate-spin" />
+            <div className="text-[13px] font-bold text-ink">
+              Reading your file…
             </div>
-            <p className="text-[10px] text-[#556346]">
-              Filtering out syllabus administrative details • Synthesizing academic exam problems
+            <p className="text-[12px] text-ink">
+              Writing practice questions from it
             </p>
           </div>
         ) : (
           <>
-            <UploadCloud className="w-7 h-7 text-[#505D43] mb-1.5" />
-            <div className="text-xs font-extrabold text-[#1E2516]">
-              Drop PDF, PPTX, DOCX, or TXT notes here, or <span className="text-[#3B4232] underline">browse</span>
+            <UploadCloud className="w-7 h-7 text-ink mb-1.5" />
+            <div className="text-[13px] font-semibold text-ink">
+              Drop a PDF, slide deck or notes file, or <span className="text-ink underline">browse</span>
             </div>
-            <p className="text-[10px] text-[#717E66] mt-0.5">
-              Category: <strong>{selectedType.replace('_', ' ').toUpperCase()}</strong> • Deep Academic Extraction for {courseCode}
+            <p className="text-[12px] text-muted mt-0.5">
+              {courseCode} · {selectedType === 'past_exam' ? 'Past exam' : selectedType === 'lecture_notes' ? 'Lecture slides' : 'Course content'}
             </p>
           </>
         )}
@@ -291,17 +296,17 @@ export const FileEmbedSection: React.FC<FileEmbedSectionProps> = ({
 
       {/* Upload Feedback */}
       {uploadSuccessMsg && (
-        <div className="p-3 rounded-xl bg-[#E8F8D0] border border-[#96D54B] text-[#224A10] text-xs font-bold flex items-center gap-2 animate-in fade-in">
-          <CheckCircle2 className="w-4 h-4 text-[#396C1E] shrink-0" />
+        <div className="p-3 rounded-xl bg-ink border border-ink text-[13px] font-bold flex items-center gap-2 animate-in fade-in text-white">
+          <CheckCircle2 className="w-4 h-4 text-white shrink-0" />
           <span>{uploadSuccessMsg}</span>
         </div>
       )}
 
       {/* Quick 1-Click Sample File Buttons */}
-      <div className="p-3 rounded-xl bg-[#F4EEDC] border border-[#E0D7BF] space-y-1.5">
-        <div className="text-[10px] font-black uppercase tracking-wider text-[#5D6B50] flex items-center gap-1">
-          <Sparkles className="w-3 h-3 text-[#3B4232]" />
-          Instant Demo Presets for {courseCode} (Pre-scraped Course Content):
+      <div className="p-3 rounded-xl bg-soft border border-line space-y-1.5">
+        <div className="text-[12px] font-bold uppercase tracking-wider text-muted flex items-center gap-1">
+          <Sparkles className="w-3 h-3 text-ink" />
+          Try a sample file
         </div>
         <div className="flex flex-wrap gap-2">
           <button
@@ -314,10 +319,10 @@ export const FileEmbedSection: React.FC<FileEmbedSectionProps> = ({
                 '2.4 MB'
               )
             }
-            className="px-2.5 py-1 rounded-lg bg-white hover:bg-[#3B4232] hover:text-[#C4F46C] text-[#2A3420] text-[11px] font-bold border border-[#D5CCB4] transition-colors flex items-center gap-1 cursor-pointer"
+            className="px-2.5 py-1 rounded-lg bg-white hover:bg-ink hover:text-white text-ink text-[13px] font-bold border border-line transition-colors flex items-center gap-1 cursor-pointer"
           >
             <Plus className="w-3 h-3" />
-            + Embed Past Midterm Exam.pdf
+            Past Midterm Exam.pdf
           </button>
           <button
             type="button"
@@ -329,10 +334,10 @@ export const FileEmbedSection: React.FC<FileEmbedSectionProps> = ({
                 '5.1 MB'
               )
             }
-            className="px-2.5 py-1 rounded-lg bg-white hover:bg-[#3B4232] hover:text-[#C4F46C] text-[#2A3420] text-[11px] font-bold border border-[#D5CCB4] transition-colors flex items-center gap-1 cursor-pointer"
+            className="px-2.5 py-1 rounded-lg bg-white hover:bg-ink hover:text-white text-ink text-[13px] font-bold border border-line transition-colors flex items-center gap-1 cursor-pointer"
           >
             <Plus className="w-3 h-3" />
-            + Embed Lecture 7-11 Slides.pdf
+            Lecture 7-11 Slides.pdf
           </button>
           <button
             type="button"
@@ -344,49 +349,45 @@ export const FileEmbedSection: React.FC<FileEmbedSectionProps> = ({
                 '3.8 MB'
               )
             }
-            className="px-2.5 py-1 rounded-lg bg-white hover:bg-[#3B4232] hover:text-[#C4F46C] text-[#2A3420] text-[11px] font-bold border border-[#D5CCB4] transition-colors flex items-center gap-1 cursor-pointer"
+            className="px-2.5 py-1 rounded-lg bg-white hover:bg-ink hover:text-white text-ink text-[13px] font-bold border border-line transition-colors flex items-center gap-1 cursor-pointer"
           >
             <BookOpen className="w-3 h-3" />
-            + Embed Course Content & Formulas.pdf
+            Course Content & Formulas.pdf
           </button>
         </div>
       </div>
 
       {/* Embedded Files List */}
       {files.length > 0 && (
-        <div className="space-y-2 pt-2 border-t border-[#EAE3D0]">
-          <div className="flex items-center justify-between text-[11px] font-black text-[#4E5B42]">
-            <span>Embedded Course Assets ({files.length}):</span>
-            <span className="text-[10px] font-semibold text-[#546E3A] flex items-center gap-1">
-              <span className="w-1.5 h-1.5 rounded-full bg-[#5FB224]" />
-              Course Content Synced with Study Engine
-            </span>
+        <div className="space-y-2 pt-2 border-t border-line">
+          <div className="flex items-center justify-between text-[13px] font-bold text-ink">
+            <span>Files ({files.length})</span>
           </div>
 
           <div className="space-y-1.5 max-h-48 overflow-y-auto pr-1">
             {files.map((file) => {
-              let badgeColor = 'bg-[#E3DCB8] text-[#4A573D]';
+              let badgeColor = 'bg-soft text-ink';
               let typeLabel = 'Past Exam';
               if (file.type === 'lecture_notes') {
-                badgeColor = 'bg-[#DCE8CF] text-[#2F521B]';
+                badgeColor = 'bg-soft text-ink';
                 typeLabel = 'Lecture Notes';
               } else if (file.type === 'course_content' || (file.type as string) === 'syllabus_rubric') {
-                badgeColor = 'bg-[#D2E7C4] text-[#1E4D12]';
+                badgeColor = 'bg-soft text-ink';
                 typeLabel = 'Course Content';
               }
 
               return (
                 <div
                   key={file.id}
-                  className="p-2.5 rounded-xl bg-[#F7F4EB] border border-[#DDD4BD] flex items-center justify-between gap-3 text-xs"
+                  className="p-2.5 rounded-xl bg-subtle border border-line flex items-center justify-between gap-3 text-[13px]"
                 >
                   <div className="flex items-center gap-2.5 min-w-0">
-                    <FileText className="w-4 h-4 text-[#3B4232] shrink-0" />
+                    <FileText className="w-4 h-4 text-ink shrink-0" />
                     <div className="min-w-0">
-                      <div className="font-bold text-[#1E2516] truncate max-w-[200px] sm:max-w-xs">
+                      <div className="font-bold text-ink truncate max-w-[200px] sm:max-w-xs">
                         {file.name}
                       </div>
-                      <div className="text-[10px] text-[#657358] flex items-center gap-2">
+                      <div className="text-[12px] text-muted flex items-center gap-2">
                         <span className={`px-1.5 py-0.2 rounded-md font-bold uppercase ${badgeColor}`}>
                           {typeLabel}
                         </span>
@@ -400,8 +401,9 @@ export const FileEmbedSection: React.FC<FileEmbedSectionProps> = ({
                   <button
                     type="button"
                     onClick={() => onRemoveFile(file.id)}
-                    className="p-1.5 rounded-lg hover:bg-[#EAE1CB] text-[#9A3C23] transition-colors shrink-0 cursor-pointer"
-                    title="Remove File"
+                    className="p-1.5 rounded-lg hover:bg-soft text-ink transition-colors shrink-0 cursor-pointer"
+                    title="Remove file"
+                    aria-label={`Remove ${file.name}`}
                   >
                     <Trash2 className="w-3.5 h-3.5" />
                   </button>
