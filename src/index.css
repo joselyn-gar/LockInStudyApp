@@ -1,0 +1,136 @@
+@import "tailwindcss";
+
+@layer base {
+  body {
+    font-family: 'Plus Jakarta Sans', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    background-color: #3B4232;
+    color: #1A2114;
+    overflow-x: hidden;
+  }
+
+  h1, h2, h3, h4, .font-heading {
+    font-family: 'Plus Jakarta Sans', 'Space Grotesk', sans-serif;
+    font-weight: 800;
+    letter-spacing: -0.025em;
+  }
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+::-webkit-scrollbar-track {
+  background: #2D3325;
+}
+::-webkit-scrollbar-thumb {
+  background: #505943;
+  border-radius: 9999px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #C4F46C;
+}
+
+@keyframes breathe {
+  0%, 100% {
+    transform: scale(1) translateY(0px);
+  }
+  50% {
+    transform: scale(1.025, 0.985) translateY(-3px);
+  }
+}
+
+@keyframes naturalWaveLeft {
+  0%, 100% {
+    transform: rotate(0deg);
+  }
+  50% {
+    transform: rotate(-14deg);
+  }
+}
+
+@keyframes naturalWaveRight {
+  0%, 100% {
+    transform: rotate(0deg);
+  }
+  50% {
+    transform: rotate(18deg);
+  }
+}
+
+@keyframes naturalBlink {
+  0%, 94%, 100% {
+    transform: scaleY(1);
+  }
+  96%, 98% {
+    transform: scaleY(0.08);
+  }
+}
+
+@keyframes cheekPulse {
+  0%, 100% {
+    transform: scale(1);
+    opacity: 0.85;
+  }
+  50% {
+    transform: scale(1.08);
+    opacity: 1;
+  }
+}
+
+@keyframes floatStar {
+  0%, 100% {
+    transform: translateY(0px) rotate(0deg);
+  }
+  50% {
+    transform: translateY(-6px) rotate(1deg);
+  }
+}
+
+@keyframes sweatDrop {
+  0% {
+    opacity: 0;
+    transform: translateY(-5px) scale(0.8);
+  }
+  50% {
+    opacity: 1;
+    transform: translateY(2px) scale(1.1);
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(12px) scale(0.6);
+  }
+}
+
+.animate-breathe {
+  transform-origin: center bottom;
+  animation: breathe 3.2s ease-in-out infinite;
+}
+
+.animate-wave-left {
+  transform-origin: 64px 140px;
+  animation: naturalWaveLeft 1.8s ease-in-out infinite;
+}
+
+.animate-wave-right {
+  transform-origin: 176px 140px;
+  animation: naturalWaveRight 1.5s ease-in-out infinite;
+}
+
+.animate-blink {
+  transform-origin: center center;
+  animation: naturalBlink 4s ease-in-out infinite;
+}
+
+.animate-cheek-pulse {
+  transform-origin: center center;
+  animation: cheekPulse 2.8s ease-in-out infinite;
+}
+
+.animate-float-star {
+  animation: floatStar 4s ease-in-out infinite;
+}
+
+.animate-sweat {
+  animation: sweatDrop 1.6s ease-in-out infinite;
+}
