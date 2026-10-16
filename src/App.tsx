@@ -22,7 +22,8 @@ import { GamesScreen } from './screens/GamesScreen';
 import { MasteryScreen } from './screens/MasteryScreen';
 import { SourcesScreen } from './screens/SourcesScreen';
 import { ResultsScreen } from './screens/ResultsScreen';
-import { courseMastery, forecastToQuestion, nextExamFor, UpcomingExam } from './lib/derive';
+import { courseMastery, forecastToQuestion, nextExamFor, todayIso, UpcomingExam } from './lib/derive';
+import { dayLabel, liveStreak, nextStreak, yesterdayIso } from './lib/streak';
 
 const STORAGE_KEYS = {
   COURSES: 'lockin_courses',
@@ -30,6 +31,7 @@ const STORAGE_KEYS = {
   CANVAS_CONFIG: 'lockin_canvas_config',
   TOTAL_XP: 'lockin_total_xp',
   STREAK: 'lockin_streak',
+  LAST_STUDY_DAY: 'lockin_last_study_day',
   STUDY_HISTORY: 'lockin_study_history',
   MILESTONE_MODE: 'lockin_milestone_mode',
 };
@@ -156,7 +158,13 @@ export default function App() {
   const [syncMessage, setSyncMessage] = useState('');
 
   const [totalXp, setTotalXp] = useState<number>(() => load(STORAGE_KEYS.TOTAL_XP, 0, (r) => parseInt(r, 10) || 0));
-  const [currentStreak, setCurrentStreak] = useState<number>(() => load(STORAGE_KEYS.STREAK, 0, (r) => parseInt(r, 10) || 0));
+  const [lastStudyDay, setLastStudyDay] = useState<string>(() => load(STORAGE_KEYS.LAST_STUDY_DAY, '', (r) => r));
+  const [currentStreak, setCurrentStreak] = useState<number>(() =>
+    liveStreak(
+      load(STORAGE_KEYS.STREAK, 0, (r) => parseInt(r, 10) || 0),
+      load(STORAGE_KEYS.LAST_STUDY_DAY, '', (r) => r)
+    )
+  );
   const [studyHistory, setStudyHistory] = useState<DailyProgressPoint[]>(() => load(STORAGE_KEYS.STUDY_HISTORY, []));
 
   const [isClassEditModalOpen, setIsClassEditModalOpen] = useState<boolean>(false);
@@ -176,6 +184,7 @@ export default function App() {
   useEffect(() => save(STORAGE_KEYS.CANVAS_CONFIG, JSON.stringify(canvasConfig)), [canvasConfig]);
   useEffect(() => save(STORAGE_KEYS.TOTAL_XP, String(totalXp)), [totalXp]);
   useEffect(() => save(STORAGE_KEYS.STREAK, String(currentStreak)), [currentStreak]);
+  useEffect(() => save(STORAGE_KEYS.LAST_STUDY_DAY, lastStudyDay || null), [lastStudyDay]);
   useEffect(() => save(STORAGE_KEYS.STUDY_HISTORY, JSON.stringify(studyHistory)), [studyHistory]);
   useEffect(() => save(STORAGE_KEYS.MILESTONE_MODE, milestoneMode), [milestoneMode]);
 
@@ -199,6 +208,7 @@ export default function App() {
     setForecasts(INITIAL_FORECASTS);
     setTotalXp(145);
     setCurrentStreak(4);
+    setLastStudyDay(yesterdayIso());
     setStudyHistory(DEMO_STUDY_HISTORY);
     setCanvasConfig({
       patToken: '',
@@ -217,6 +227,7 @@ export default function App() {
     setForecasts([]);
     setTotalXp(0);
     setCurrentStreak(0);
+    setLastStudyDay('');
     setStudyHistory([]);
     setCanvasConfig(BLANK_CANVAS_CONFIG);
     Object.values(STORAGE_KEYS).forEach((k) => save(k, null));
@@ -395,14 +406,17 @@ export default function App() {
 
     const xpGained = points * 2;
     setTotalXp((prev) => prev + xpGained);
-    setCurrentStreak((prev) => (prev === 0 ? 1 : prev));
+    if (lastStudyDay !== todayIso()) {
+      setCurrentStreak((prev) => nextStreak(prev, lastStudyDay));
+      setLastStudyDay(todayIso());
+    }
 
     // Live sync into Recharts study history
     setStudyHistory((prev) => {
-      const todayIso = new Date().toISOString().split('T')[0];
+      const today = todayIso();
       const copy = [...prev];
       const lastIndex = copy.length - 1;
-      if (lastIndex >= 0 && (copy[lastIndex].date.includes('Today') || copy[lastIndex].fullDate === todayIso)) {
+      if (lastIndex >= 0 && copy[lastIndex].fullDate === today) {
         copy[lastIndex] = {
           ...copy[lastIndex],
           xpEarned: copy[lastIndex].xpEarned + xpGained,
@@ -415,10 +429,10 @@ export default function App() {
       return [
         ...copy,
         {
-          date: 'Today (Sun)',
-          fullDate: todayIso,
+          date: dayLabel(today),
+          fullDate: today,
           xpEarned: xpGained,
-          cumulativeXp: xpGained,
+          cumulativeXp: (copy[lastIndex]?.cumulativeXp || 0) + xpGained,
           masteryPercentage: computedAvgMastery || 75,
           questionsAnswered: 1,
           focusArea: 'Interactive Study Session',
