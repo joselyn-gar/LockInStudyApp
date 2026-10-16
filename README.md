@@ -24,13 +24,20 @@ Lock In is an installable web app (a PWA). It gets its own icon, opens full scre
 
 ## Host it
 
-Lock In is a small Node server (`server.ts`) plus the React app. The server keeps your Gemini key private and talks to Canvas for you. Any host that runs Node works:
+### Vercel (free, easiest)
+
+1. Sign in at [vercel.com](https://vercel.com) with GitHub and choose **Add New → Project**.
+2. Import **lockinstudyapp**. Vercel reads `vercel.json`, so leave the build settings as they are.
+3. Optional: under **Environment Variables**, add `GEMINI_API_KEY`. Without it, forecasts and uploads use the built-in fallbacks.
+4. Click **Deploy**. You get a link like `lockinstudyapp.vercel.app`.
+
+The React app is served as static files. The API (`server/app.ts`) runs as one Vercel function (`api/index.ts`).
+
+### Any Node host (Render, Railway, Cloud Run)
 
 1. `npm run build`
 2. Start with `NODE_ENV=production npm start`
 3. Set `GEMINI_API_KEY` in the host's environment settings.
-
-Render, Railway and Google Cloud Run all have free or cheap tiers and give you `https://` automatically. AI Studio's own Deploy button also targets Cloud Run.
 
 ## Project map
 
@@ -43,7 +50,9 @@ Render, Railway and Google Cloud Run all have free or cheap tiers and give you `
 | `src/components/ui.tsx` | Buttons, cards, chips, rings, bars, mastery tags |
 | `src/lib/derive.ts` | Read-only helpers (mastery %, next exam, countdowns) |
 | `src/lib/streak.ts` | Day-based streak |
-| `server.ts` | Canvas proxy and Gemini calls |
+| `server/app.ts` | API routes: Canvas proxy and Gemini calls |
+| `server.ts` | Local and Node-host server (Vite in dev, static files in production) |
+| `api/index.ts`, `vercel.json` | Vercel entry point and config |
 | `public/` | App manifest, icons and the offline service worker |
 
 Your data (classes, XP, streak) lives in your browser's local storage. Clearing site data resets it.
